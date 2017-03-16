@@ -2,8 +2,13 @@ version: '2'
 
 services:
   gitblit:
-    image: jacekkow/gitblit
+    image: jacekkow/gitblit 
+    network_mode: "bridge"
+    environment:
+      - VIRTUAL_PORT=8080
+      - VIRTUAL_HOST=gitblit.localhost
+    expose:
+      - 8080
     ports:
-      - "8081:8080"
       - "9418:9418"
       - "29418:29418"

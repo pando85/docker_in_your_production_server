@@ -8,21 +8,29 @@ volumes:
 services:
   nginx:
     image: pando85/openeats-nginx:latest
+    network_mode: "bridge"
+    environment:
+      - VIRTUAL_HOST=recipes.localhost
     links:
       - web
     volumes_from:
       - web
-    ports:
-      - "8080:80"
+    expose:
+     - 80
 
   web:
     image: pando85/openeats:latest
+    network_mode: "bridge"
     links:
       - database
     expose:
       - "8000"
     environment:
       - DEBUG=False
+      - DATABASE_NAME=openeats
+      - DATABASE_USER=openeats
+      - DATABASE_PASSWORD=admin
+      - ALLOWED_HOST=recipes.localhost
     volumes:
       - static_files:/usr/src/app/openeats/static
       - media_files:/usr/src/app/openeats/site-media
@@ -30,6 +38,7 @@ services:
 
   database:
     image: postgres:9.6
+    network_mode: "bridge"
     volumes:
       - database:/var/lib/postgresql
     environment:

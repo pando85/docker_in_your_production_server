@@ -1,8 +1,10 @@
 version: '2'
-
 services:
-  proxy:
-    image: nginx
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    network_mode: "bridge"
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
     volumes:
-     - ./default.conf:/etc/nginx/conf.d/default.conf
-    network_mode: host
+      - /var/run/docker.sock:/tmp/docker.sock:ro
