@@ -1,0 +1,40 @@
+version: '2'
+
+volumes:
+  database:
+  static_files:
+  media_files:
+
+services:
+  nginx:
+    image: pando85/openeats-nginx:latest
+    links:
+      - web
+    volumes_from:
+      - web
+    ports:
+      - "8080:80"
+
+  web:
+    image: pando85/openeats:latest
+    links:
+      - database
+    expose:
+      - "8000"
+    environment:
+      - DEBUG=False
+    volumes:
+      - static_files:/usr/src/app/openeats/static
+      - media_files:/usr/src/app/openeats/site-media
+    command: ["/usr/local/bin/gunicorn", "openeats.wsgi:application", "-b :8000", "-w 6", "-t 5000"]
+
+  database:
+    image: postgres:9.6
+    volumes:
+      - database:/var/lib/postgresql
+    environment:
+      - POSTGRES_DB=openeats
+      - POSTGRES_USER=openeats
+      - POSTGRES_PASSWORD=admin
+    expose:
+      - "5432"

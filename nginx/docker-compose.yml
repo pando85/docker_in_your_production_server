@@ -1,0 +1,8 @@
+version: '2'
+
+services:
+  proxy:
+    image: nginx
+    volumes:
+     - ./default.conf:/etc/nginx/conf.d/default.conf
+    network_mode: host
